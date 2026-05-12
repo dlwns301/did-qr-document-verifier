@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>문서 검증</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+
+        <h1>문서 검증</h1>
+
+        <p class="description">
+            QR을 통해 접근한 전자문서입니다.
+            문서 내용을 입력하면 저장된 해시와 비교하여 위변조 여부를 검증합니다.
+        </p>
+
+        <div class="info-row">
+            <b>문서 ID</b>
+            <span th:text="${document.id}"></span>
+        </div>
+
+        <div class="info-row">
+            <b>문서 제목</b>
+            <span th:text="${document.title}"></span>
+        </div>
+
+        <div class="info-row">
+            <b>발급자 DID</b>
+            <span th:text="${document.issuerDid}"></span>
+        </div>
+
+        <div class="info-row">
+            <b>저장된 해시</b>
+            <span class="hash" th:text="${document.contentHash}"></span>
+        </div>
+
+        <hr style="margin: 28px 0; border: none; border-top: 1px solid #e5e7eb;">
+
+        <form th:action="@{/verify/{id}(id=${document.id})}" method="post">
+
+            <div class="form-group">
+                <label>검증할 문서 내용</label>
+
+                <textarea
+                        name="content"
+                        rows="10"
+                        required></textarea>
+            </div>
+
+            <button type="submit">
+                문서 검증하기
+            </button>
+
+        </form>
+
+        <div th:if="${result != null}">
+
+            <div th:if="${result}" class="result success">
+                ✅ 정상 문서입니다.<br>
+                저장된 해시와 입력 문서 해시가 일치합니다.
+            </div>
+
+            <div th:if="${!result}" class="result fail">
+                ⚠️ 위변조 의심 문서입니다.<br>
+                저장된 해시와 입력 문서 해시가 일치하지 않습니다.
+            </div>
+
+            <div class="info-row" style="margin-top: 24px;">
+                <b>입력 문서 해시</b>
+                <span class="hash" th:text="${inputHash}"></span>
+            </div>
+
+        </div>
+
+        <div class="actions">
+            <a class="btn btn-secondary" href="/documents/new">
+                새 문서 등록
+            </a>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

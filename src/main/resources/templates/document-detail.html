@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>문서 등록 완료</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+
+        <h1>문서 등록 완료 ✅</h1>
+
+        <p class="description">
+            문서 해시가 생성되었고, QR 코드를 통해 검증 페이지에 접근할 수 있습니다.
+        </p>
+
+        <div class="info-row">
+            <b>문서 ID</b>
+            <span th:text="${document.id}"></span>
+        </div>
+
+        <div class="info-row">
+            <b>문서 제목</b>
+            <span th:text="${document.title}"></span>
+        </div>
+
+        <div class="info-row">
+            <b>발급자 DID</b>
+            <span th:text="${document.issuerDid}"></span>
+        </div>
+
+        <div class="info-row">
+            <b>발급일</b>
+            <span th:text="${document.issuedAt}"></span>
+        </div>
+
+        <div class="info-row">
+            <b>문서 해시</b>
+            <span class="hash" th:text="${document.contentHash}"></span>
+        </div>
+
+        <div class="qr-box">
+            <h3>검증용 QR 코드</h3>
+            <img th:src="@{${document.qrPath}}" alt="QR Code" width="250" height="250">
+            <p class="description">
+                모바일로 QR을 스캔하면 검증 페이지로 이동합니다.
+            </p>
+        </div>
+
+        <div class="actions">
+            <a class="btn" th:href="@{/verify/{id}(id=${document.id})}">
+                검증 페이지로 이동
+            </a>
+
+            <a class="btn btn-secondary" href="/documents/new">
+                새 문서 등록
+            </a>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
