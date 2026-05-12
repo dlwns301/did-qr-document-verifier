@@ -32,6 +32,14 @@ public class HashUtil {
     // 파일 해시화
     public static String sha256(MultipartFile file) {
         try {
+
+            // pdf 파일만 허용
+            /*
+                if (!file.getContentType().equals("application/pdf")) {
+                throw new RuntimeException("PDF만 업로드 가능합니다.");
+            }
+            */
+
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
 
             byte[] hash = digest.digest(file.getBytes());

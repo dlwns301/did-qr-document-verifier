@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @Controller
 @RequiredArgsConstructor
@@ -87,5 +89,17 @@ public class DocumentController {
         model.addAttribute("verifyType", "file");
 
         return "verify";
+    }
+
+    @ControllerAdvice
+    public class GlobalExceptionHandler {
+        @ExceptionHandler(MaxUploadSizeExceededException.class)
+        public String handleMaxUploadSizeExceededException(
+                MaxUploadSizeExceededException e,
+                Model model
+        ) {
+            model.addAttribute("error", "파일 크기가 너무 큽니다. 10MB 이하의 파일만 업로드해주세요.");
+            return "document-form";
+        }
     }
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>DID QR Document Verifier</title>
@@ -9,13 +9,14 @@
 
 <div class="container">
     <div class="card">
-
         <h1>DID QR Document Verifier</h1>
 
         <p class="description">
             전자문서를 등록하면 SHA-256 해시와 QR 기반 검증 링크가 생성됩니다.
             문서 원본 대신 해시를 저장하여 위변조 여부를 검증합니다.
         </p>
+
+        <p th:if="${error}" th:text="${error}" class="error-message"></p>
 
         <form action="/documents" method="post" enctype="multipart/form-data">
 
@@ -40,7 +41,14 @@
 
             <div class="form-group">
                 <label>PDF 문서 파일</label>
-                <input type="file" name="file" accept="application/pdf">
+                <input
+                        type="file"
+                        name="file"
+                        accept="application/pdf"
+                        onchange="validateFileSize(this)">
+                <p class="file-guide">
+                    최대 업로드 용량: 10MB
+                </p>
             </div>
 
             <button type="submit">
@@ -52,5 +60,25 @@
     </div>
 </div>
 
+<script>
+    function validateFileSize(input) {
+
+        const maxSize = 10 * 1024 * 1024; // 10MB
+
+        const file = input.files[0];
+
+        if (!file) {
+            return;
+        }
+
+        if (file.size > maxSize) {
+
+            alert("10MB 이하의 PDF 파일만 업로드 가능합니다.");
+
+            input.value = "";
+
+        }
+    }
+</script>
 </body>
 </html>
