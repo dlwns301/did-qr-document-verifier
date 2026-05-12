@@ -17,7 +17,7 @@
             문서 원본 대신 해시를 저장하여 위변조 여부를 검증합니다.
         </p>
 
-        <form action="/documents" method="post">
+        <form action="/documents" method="post" enctype="multipart/form-data">
 
             <div class="form-group">
                 <label>문서 제목</label>
@@ -35,11 +35,12 @@
 
             <div class="form-group">
                 <label>문서 내용</label>
+                <textarea name="content" rows="10"></textarea>
+            </div>
 
-                <textarea
-                        name="content"
-                        rows="10"
-                        required></textarea>
+            <div class="form-group">
+                <label>PDF 문서 파일</label>
+                <input type="file" name="file" accept="application/pdf">
             </div>
 
             <button type="submit">

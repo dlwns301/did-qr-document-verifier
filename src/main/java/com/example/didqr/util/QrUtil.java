@@ -12,7 +12,7 @@ public class QrUtil {
 
     public static String generateQrImage(Long documentId) {
         try {
-            String verifyUrl = "http://10.1.0.162:8080/verify/" + documentId;
+            String verifyUrl = "http://192.168.200.185:8080/verify/" + documentId;
 
             String fileName = "document-" + documentId + ".png";
             Path path = Paths.get("qr/" + fileName);

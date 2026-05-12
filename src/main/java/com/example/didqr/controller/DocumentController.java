@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequiredArgsConstructor
@@ -27,9 +28,10 @@ public class DocumentController {
     public String createDocument(
             @RequestParam String title,
             @RequestParam String issuerDid,
-            @RequestParam String content
+            @RequestParam(required = false) String content,
+            @RequestParam(required = false) MultipartFile file
     ) {
-        Document document = documentService.saveDocument(title, issuerDid, content);
+        Document document = documentService.saveDocument(title, issuerDid, content, file);
 
         return "redirect:/documents/" + document.getId();
     }
@@ -65,6 +67,24 @@ public class DocumentController {
         model.addAttribute("document", document);
         model.addAttribute("result", result);
         model.addAttribute("inputHash", inputHash);
+
+        return "verify";
+    }
+
+    @PostMapping("/verify/{id}/file")
+    public String verifyDocumentFile(
+            @PathVariable Long id,
+            @RequestParam MultipartFile file,
+            Model model
+    ) {
+        Document document = documentService.findDocument(id);
+        boolean result = documentService.verifyDocumentFile(id, file);
+        String inputHash = documentService.getFileHash(file);
+
+        model.addAttribute("document", document);
+        model.addAttribute("result", result);
+        model.addAttribute("inputHash", inputHash);
+        model.addAttribute("verifyType", "file");
 
         return "verify";
     }
