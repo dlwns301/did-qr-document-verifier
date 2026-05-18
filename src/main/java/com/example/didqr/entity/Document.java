@@ -26,6 +26,14 @@ public class Document {
 
     private String qrPath;
 
+    // 블록체인 txid
+    @Column
+    private String txHash;
+
+    // 블록체인 저장 상태
+    @Column
+    private Boolean blockchainRegistered = false;
+
     public void updateQrPath(String qrPath) {
         this.qrPath = qrPath;
     }
@@ -35,5 +43,10 @@ public class Document {
         this.issuerDid = issuerDid;
         this.contentHash = contentHash;
         this.issuedAt = LocalDateTime.now();
+    }
+
+    public void updateBlockchainInfo(String txHash) {
+        this.txHash = txHash;
+        this.blockchainRegistered = true;
     }
 }

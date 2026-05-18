@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class DocumentService {
 
     private final DocumentRepository documentRepository;
+    private final BlockchainService blockchainService;
 
     // 문서 or 파일 저장
     public Document saveDocument(String title, String issuerDid, String content, MultipartFile file) {
@@ -28,6 +29,14 @@ public class DocumentService {
 
         Document savedDocument = documentRepository.save(document);
 
+        String txHash = blockchainService.registerDocument(
+                savedDocument.getId(),
+                issuerDid,
+                contentHash
+        );
+
+        savedDocument.updateBlockchainInfo(txHash);
+
         String qrPath = QrUtil.generateQrImage(savedDocument.getId());
         savedDocument.updateQrPath(qrPath);
 
@@ -41,7 +50,7 @@ public class DocumentService {
     }
 
     // 문서 검증
-    public boolean verifyDocument(Long id, String inputContent) {
+        public boolean verifyDocument(Long id, String inputContent) {
         Document document = findDocument(id);
 
         String inputHash = HashUtil.sha256(inputContent);
@@ -56,11 +65,10 @@ public class DocumentService {
 
     // 파일 검증
     public boolean verifyDocumentFile(Long id, MultipartFile file) {
-        Document document = findDocument(id);
+        String uploadHash = HashUtil.sha256(file);
+        String blockchainHash = blockchainService.getContentHash(id);
 
-        String fileHash = HashUtil.sha256(file);
-
-        return document.getContentHash().equals(fileHash);
+        return uploadHash.equals(blockchainHash);
     }
 
     // 파일 해시화
